@@ -1,3 +1,4 @@
+import 'package:weather_app/core/utils/weather_code_mapper.dart';
 import 'package:weather_app/features/weather/domain/entities/weather.dart';
 
 class WeatherModel extends Weather {
@@ -14,12 +15,15 @@ class WeatherModel extends Weather {
     String city,
   ) {
     final current = json['current'] as Map<String, dynamic>;
+
     return WeatherModel(
       city: city,
       temperature: (current['temperature_2m'] as num).toDouble(),
-      weatherCondition: current['Weather_code'].toString(),
+      weatherCondition: WeatherCodeMapper.getCondition(
+        current['weather_code'] as int,
+      ),
       humidity: current['relative_humidity_2m'] as int,
-      windSpeed: (current['wind_speed_10m']as num).toDouble(),
+      windSpeed: (current['wind_speed_10m'] as num).toDouble(),
     );
   }
 }
