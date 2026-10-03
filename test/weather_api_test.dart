@@ -7,12 +7,6 @@ void main() {
 
     final weather = await dependencies.getWeather('Dhaka');
 
-    print('City: ${weather.city}');
-    print('Temperature: ${weather.temperature}°C');
-    print('Condition: ${weather.weatherCondition}');
-    print('Humidity: ${weather.humidity}%');
-    print('Wind Speed: ${weather.windSpeed} km/h');
-
     expect(weather.city, isNotEmpty);
     expect(weather.temperature, isA<double>());
     expect(weather.weatherCondition, isNotEmpty);
