@@ -4,6 +4,7 @@ import 'package:weather_app/features/weather/domain/entities/weather.dart';
 import 'package:weather_app/features/weather/presentation/weather_state.dart';
 import 'package:weather_app/features/weather/presentation/widgets/weather_error_view.dart';
 import 'package:weather_app/features/weather/presentation/widgets/weather_info_card.dart';
+import 'package:weather_app/features/weather/presentation/widgets/hourly_forecast.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -52,58 +53,65 @@ class _WeatherScreenState extends State<WeatherScreen> {
       appBar: AppBar(
         title: const Text('Weather App'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: cityController,
-              decoration: const InputDecoration(
-                hintText: 'Enter city name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            ElevatedButton(
-              onPressed: () {
-                final city = cityController.text.trim();
-
-                if (city.isEmpty) {
-                  return;
-                }
-
-                searchWeather(city);
-              },
-              child: const Text('Search'),
-            ),
-
-            const SizedBox(height: 24),
-
-            if (state == WeatherState.loading)
-              const CircularProgressIndicator(),
-
-            if (state == WeatherState.success && weather != null)
-              WeatherInfoCard(
-                weather: weather!,
-              ),
-
-            if (state == WeatherState.error)
-              WeatherErrorView(
-                onRetry: () {
-                  final city = cityController.text.trim();
-
-                  if (city.isEmpty) {
-                    return;
-                  }
-
-                  searchWeather(city);
-                },
-              ),
-          ],
+      body: SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+  child: Column(
+    children: [
+      TextField(
+        controller: cityController,
+        decoration: const InputDecoration(
+          hintText: 'Enter city name',
+          border: OutlineInputBorder(),
         ),
       ),
+
+      const SizedBox(height: 16),
+
+      ElevatedButton(
+        onPressed: () {
+          final city = cityController.text.trim();
+
+          if (city.isEmpty) {
+            return;
+          }
+
+          searchWeather(city);
+        },
+        child: const Text('Search'),
+      ),
+
+      const SizedBox(height: 24),
+
+      if (state == WeatherState.loading)
+        const CircularProgressIndicator(),
+
+      if (state == WeatherState.success && weather != null) ...[
+        WeatherInfoCard(
+          weather: weather!,
+        ),
+
+        const SizedBox(height: 24),
+
+        HourlyForecast(
+          forecast: weather!.hourlyForecast,
+        ),
+      ],
+
+      if (state == WeatherState.error)
+        WeatherErrorView(
+          onRetry: () {
+            final city = cityController.text.trim();
+
+            if (city.isEmpty) {
+              return;
+            }
+
+            searchWeather(city);
+          },
+        ),
+    ],
+  ),
+),
     );
   }
 }

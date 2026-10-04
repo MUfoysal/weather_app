@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:weather_app/features/weather/domain/entities/weather.dart';
 
 class WeatherInfoCard extends StatelessWidget {
@@ -11,6 +12,9 @@ class WeatherInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final precipitationProbability =
+        weather.hourlyForecast.first.precipitationProbability;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -43,6 +47,19 @@ class WeatherInfoCard extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 16),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.water_drop),
+                const SizedBox(width: 6),
+                Text(
+                  'Rain probability $precipitationProbability%',
+                ),
+              ],
+            ),
+
             const SizedBox(height: 20),
 
             Row(
@@ -56,6 +73,7 @@ class WeatherInfoCard extends StatelessWidget {
                     const Text('Humidity'),
                   ],
                 ),
+
                 Column(
                   children: [
                     const Icon(Icons.air),
