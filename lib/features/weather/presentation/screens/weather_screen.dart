@@ -6,6 +6,7 @@ import 'package:weather_app/features/weather/presentation/widgets/weather_error_
 import 'package:weather_app/features/weather/presentation/widgets/weather_info_card.dart';
 import 'package:weather_app/features/weather/presentation/widgets/hourly_forecast.dart';
 import 'package:weather_app/features/weather/presentation/widgets/daily_forecast.dart';
+import 'package:weather_app/features/weather/presentation/widgets/weather_welcome_view.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -82,6 +83,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
 
       const SizedBox(height: 24),
+      if(state ==WeatherState.initial)
+      const WeatherWelcomeView(),
 
       if (state == WeatherState.loading)
         const CircularProgressIndicator(),
