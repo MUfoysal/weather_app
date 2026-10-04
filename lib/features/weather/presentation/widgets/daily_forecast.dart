@@ -189,7 +189,7 @@ class _DailyRow extends StatelessWidget {
                     ? Duration.zero
                     : Duration(milliseconds: 500 + index * 70),
                 curve: Curves.easeOutCubic,
-                builder: (_, progress, __) => _RangeBar(
+                builder: (_, progress, _) => _RangeBar(
                   low: item.minTemperature,
                   high: item.maxTemperature,
                   weekMin: weekMin,
