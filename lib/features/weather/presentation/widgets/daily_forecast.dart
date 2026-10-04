@@ -142,7 +142,7 @@ class _DailyRow extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.weatherCondition,
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: small,
                         ),

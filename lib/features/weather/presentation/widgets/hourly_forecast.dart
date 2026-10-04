@@ -22,7 +22,12 @@ class HourlyForecast extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final items = forecast.take(maxItems).toList(growable: false);
+    final now = DateTime.now();
+
+final items = forecast
+    .where((item) => item.time.isAfter(now))
+    .take(maxItems)
+    .toList(growable: false);
 
     final height = MediaQuery.textScalerOf(context).scale(_baseHeight);
 
