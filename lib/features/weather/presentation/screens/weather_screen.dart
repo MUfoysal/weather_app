@@ -10,10 +10,7 @@ import 'package:weather_app/features/weather/presentation/widgets/weather_info_c
 import 'package:weather_app/features/weather/presentation/widgets/weather_welcome_view.dart';
 
 class WeatherScreen extends StatefulWidget {
-  const WeatherScreen({
-    super.key,
-    this.dependencies,
-  });
+  const WeatherScreen({super.key, this.dependencies});
 
   final WeatherDependencies? dependencies;
 
@@ -52,26 +49,28 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     return switch (_controller.state) {
       WeatherState.initial => const KeyedSubtree(
-          key: ValueKey('initial'),
-          child: WeatherWelcomeView(),
+        key: ValueKey('initial'),
+        child: WeatherWelcomeView(),
+      ),
+      WeatherState.loading => const KeyedSubtree(
+        key: ValueKey('loading'),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 64),
+          child: Center(child: CircularProgressIndicator()),
         ),
-      WeatherState.loading when weather == null => const KeyedSubtree(
-          key: ValueKey('loading'),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 64),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        ),
-      WeatherState.loading || WeatherState.success => weather == null
-          ? const SizedBox.shrink(key: ValueKey('empty'))
-          : KeyedSubtree(
-              key: const ValueKey('content'),
-              child: _WeatherContent(weather: weather),
-            ),
+      ),
+
+      WeatherState.success =>
+        weather == null
+            ? const SizedBox.shrink(key: ValueKey('empty'))
+            : KeyedSubtree(
+                key: const ValueKey('content'),
+                child: _WeatherContent(weather: weather),
+              ),
       WeatherState.error => KeyedSubtree(
-          key: const ValueKey('error'),
-          child: WeatherErrorView(onRetry: _controller.retry),
-        ),
+        key: const ValueKey('error'),
+        child: WeatherErrorView(onRetry: _controller.retry),
+      ),
     };
   }
 
@@ -80,9 +79,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Weather'),
-      ),
+      appBar: AppBar(title: const Text('Weather')),
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
@@ -113,10 +110,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         switchOutCurve: Curves.easeInCubic,
                         layoutBuilder: (current, previous) => Stack(
                           alignment: Alignment.topCenter,
-                          children: [
-                            ...previous,
-                             ?current,
-                          ],
+                          children: [...previous, ?current],
                         ),
                         child: _buildBody(),
                       ),
