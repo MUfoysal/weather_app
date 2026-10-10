@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-
 import 'package:weather_icons_animated/weather_icons_animated.dart';
 
 import 'package:weather_app/features/weather/domain/entities/weather.dart';
@@ -94,13 +93,17 @@ class WeatherInfoCard extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '$temperature',
-                              style: theme.textTheme.displayLarge?.copyWith(
-                                fontSize: 76,
-                                height: 0.95,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white,
+                            Flexible(
+                              child: Text(
+                                '$temperature',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.displayLarge?.copyWith(
+                                  fontSize: 76,
+                                  height: 0.95,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                             Padding(
@@ -128,19 +131,20 @@ class WeatherInfoCard extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                  if (weatherCode != null)
+                  if (weatherCode != null) ...[
+                    const SizedBox(width: 8),
                     SizedBox(
-                      width: 88,
-                      height: 88,
+                      width: 72,
+                      height: 72,
                       child: WeatherIcon(
                         icon: WeatherIcons.fromOpenMeteoCode(
                           weatherCode,
                           isDay: isDay,
                         ),
-                        size: 88,
+                        size: 72,
                       ),
                     ),
+                  ],
                 ],
               ),
 
@@ -156,11 +160,15 @@ class WeatherInfoCard extends StatelessWidget {
                       color: Colors.white.withAlpha(210),
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      '$precipitation% chance of rain',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withAlpha(220),
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Text(
+                        '$precipitation% chance of rain',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white.withAlpha(220),
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -190,7 +198,7 @@ class WeatherInfoCard extends StatelessWidget {
                         label: 'Humidity',
                       ),
                     ),
-                    _Divider(),
+                    const _Divider(),
                     Expanded(
                       child: _StatItem(
                         icon: Icons.air_outlined,
@@ -224,30 +232,46 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 19,
-          color: Colors.white.withAlpha(220),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 19,
+            color: Colors.white.withAlpha(220),
           ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: Colors.white.withAlpha(180),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              value,
+              maxLines: 1,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 2),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: Colors.white.withAlpha(180),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

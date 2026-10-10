@@ -1,33 +1,56 @@
+
 import 'package:flutter/material.dart';
 
 class WeatherErrorView extends StatelessWidget {
-  final VoidCallback onRetry;
-  const WeatherErrorView({super.key,
-  required this.onRetry,
+  const WeatherErrorView({
+    super.key,
+    required this.message,
+    required this.onRetry,
   });
+
+  final String message;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Icon(Icons.error_outline,
-        size: 48,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 32,
         ),
-        const SizedBox(height: 12,),
-        const Text(
-          'Something went wrong.',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.cloud_off_rounded,
+              size: 56,
+              color: Colors.redAccent,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Unable to load weather',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Try Again'),
+            ),
+          ],
         ),
-        const SizedBox(height: 8,),
-        const Text('Please try again.'),
-        const SizedBox(height: 16,),
-
-        ElevatedButton(onPressed: onRetry,
-         child: const Text('Retry'),),
-      ],
+      ),
     );
   }
 }

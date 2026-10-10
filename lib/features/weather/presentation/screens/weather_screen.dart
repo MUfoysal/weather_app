@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:weather_app/core/error/weather_exception.dart';
 import 'package:weather_app/features/weather/di/weather_dependencies.dart';
 import 'package:weather_app/features/weather/domain/entities/weather.dart';
 import 'package:weather_app/features/weather/presentation/weather_state.dart';
@@ -59,7 +60,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
           child: Center(child: CircularProgressIndicator()),
         ),
       ),
-
       WeatherState.success =>
         weather == null
             ? const SizedBox.shrink(key: ValueKey('empty'))
@@ -69,7 +69,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
               ),
       WeatherState.error => KeyedSubtree(
         key: const ValueKey('error'),
-        child: WeatherErrorView(onRetry: _controller.retry),
+        child: WeatherErrorView(
+          message:
+              _controller.errorMessage ??
+              'Something went wrong. Please try again.',
+          onRetry: _controller.retry,
+        ),
       ),
     };
   }
@@ -134,11 +139,13 @@ class _WeatherController extends ChangeNotifier {
   WeatherState _state = WeatherState.initial;
   Weather? _weather;
   String? _lastCity;
+  String? _errorMessage;
   int _requestId = 0;
   bool _disposed = false;
 
   WeatherState get state => _state;
   Weather? get weather => _weather;
+  String? get errorMessage => _errorMessage;
   bool get isLoading => _state == WeatherState.loading;
 
   Future<void> search(String city) async {
@@ -148,15 +155,29 @@ class _WeatherController extends ChangeNotifier {
     final requestId = ++_requestId;
     _lastCity = query;
     _state = WeatherState.loading;
+    _weather = null;
+    _errorMessage = null;
     notifyListeners();
 
     try {
       final result = await _dependencies.getWeather(query);
+
       if (_disposed || requestId != _requestId) return;
+
       _weather = result;
       _state = WeatherState.success;
-    } catch (_) {
+    } on WeatherException catch (error) {
       if (_disposed || requestId != _requestId) return;
+
+      _errorMessage = error.message;
+      _state = WeatherState.error;
+    } catch (error, stackTrace) {
+      debugPrint('Weather error: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      if (_disposed || requestId != _requestId) return;
+
+      _errorMessage = 'Something went wrong. Please try again.';
       _state = WeatherState.error;
     }
 
